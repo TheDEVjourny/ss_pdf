@@ -23,7 +23,8 @@ from functools import partial
 # getting all screen
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 # taking only extended monitor
-snapshot = ImageGrab.grab(bbox = (1920,0,3850,1080))
+BBOX = (1920,0,3850,1080) #(L,T,R,B) # or None 
+snapshot = ImageGrab.grab(bbox = BBOX)
 save_path = "MySnapshot.jpg"
 snapshot.save(save_path)
 # snapshot.show()
