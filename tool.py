@@ -39,6 +39,7 @@ def main():
     TAKE_SS = "right ctrl"
     CREATE_PDF = "right shift"
     STOP = "esc"
+    REMOVE_IMAGE = "num lock"
     # infinite loop
     while(True):
         command = kb.read_key()
@@ -52,6 +53,13 @@ def main():
             create_notes(SS_LIST)
             print("pdf created system ended")
             break
+        elif command == REMOVE_IMAGE:
+            image_no = int(input("Enter image number:"))
+            image = f"images\ss-{image_no}.png"
+            if image in SS_LIST:
+                SS_LIST.remove(image)
+            print(f"IMAGE no {image_no} REMOVED FROM PDF LIST")
+            print(SS_LIST)
         elif command == STOP:
             break
 
