@@ -7,7 +7,7 @@ COUNT = 0
 SS_LIST = []
 END = False
 
-def screen_shot(save_path, main_screen = False):
+def screen_shot(save_path, main_screen = False,show_ss = False):
     ''' '''
     ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
     BBOX = (1920,0,3850,1080) #(L,T,R,B) # or None 
@@ -15,7 +15,8 @@ def screen_shot(save_path, main_screen = False):
         BBOX = None
     snapshot = ImageGrab.grab(bbox = BBOX)
     snapshot.save(save_path)
-    snapshot.show()
+    if show_ss:
+        snapshot.show()
     return save_path
 
 def create_notes(images:list):
@@ -32,7 +33,7 @@ def create_notes(images:list):
         pdf.drawInlineImage(image, 0,0)
         # drawing a line
         pdf.line(30, 710, 550, 710)
-        shutil.rmtree(image)
+        # shutil.rmtree(image)
     # saving the pdf
     print("notes created")
     pdf.save()
@@ -45,9 +46,11 @@ while(not END):
         COUNT += 1
         image_name = screen_shot(f"ss-{COUNT}.png")
         SS_LIST.append(image_name)
-    # elif "pdf" in command.lower():
-    #     create_notes(SS_LIST)
-    #     break
+        print(f"photo -- {COUNT}")
+    elif "pdf" in command.lower():
+        create_notes(SS_LIST)
+        print("pdf created system ended")
+        break
     elif "0" in command.lower():
         END = True
         break
