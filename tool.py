@@ -2,10 +2,13 @@ from PIL import ImageGrab
 from functools import partial
 from reportlab.pdfgen import canvas
 import shutil
+import keyboard as kb
 
 COUNT = 0
 SS_LIST = []
 END = False
+TAKE_SS = "right ctrl"
+CREATE_PDF = "right shift"
 
 def screen_shot(save_path, main_screen = False,show_ss = False):
     ''' '''
@@ -41,16 +44,28 @@ def create_notes(images:list):
 
 
 while(not END):
-    command =  input()
-    if " " in command.lower(): 
+    command = kb.read_key()
+    print(command)
+    if command == TAKE_SS: 
         COUNT += 1
         image_name = screen_shot(f"ss-{COUNT}.png")
         SS_LIST.append(image_name)
         print(f"photo -- {COUNT}")
-    elif "pdf" in command.lower():
+    elif command == CREATE_PDF:
         create_notes(SS_LIST)
         print("pdf created system ended")
         break
     elif "0" in command.lower():
         END = True
         break
+
+'''
+enter
+up
+ctrl
+space
+backspace
+right ctrl
+right shift
+backspace
+'''
