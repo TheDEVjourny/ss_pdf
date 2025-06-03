@@ -1,71 +1,59 @@
-from PIL import ImageGrab
+from PIL import ImageGrab,Image
 from functools import partial
-from reportlab.pdfgen import canvas
-import shutil
+from pathlib import Path
 import keyboard as kb
 
-COUNT = 0
-SS_LIST = []
-END = False
-TAKE_SS = "right ctrl"
-CREATE_PDF = "right shift"
 
-def screen_shot(save_path, main_screen = False,show_ss = False):
+def screen_shot(save_path, main_screen = False,show_captured_ss = False):
     ''' '''
     ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
-    BBOX = (1920,0,3850,1080) #(L,T,R,B) # or None 
-    if main_screen:
-        BBOX = None
+    
+    BBOX = None 
+    if not main_screen:
+        BBOX = (1920,0,3850,1080) #(L,T,R,B)
     snapshot = ImageGrab.grab(bbox = BBOX)
     snapshot.save(save_path)
-    if show_ss:
+    if show_captured_ss:
         snapshot.show()
     return save_path
 
-def create_notes(images:list):
-    ''' '''
-    fileName = 'Notes.pdf'
-    documentTitle = 'sample'
-    title = 'Findingd'
-    # creating a pdf object
-    pdf = canvas.Canvas(fileName)
-    # setting the title of the document
-    pdf.setTitle(documentTitle)
-    pdf.drawCentredString(300, 770, title)
-    for image in images:
-        pdf.drawInlineImage(image, 0,0)
-        # drawing a line
-        pdf.line(30, 710, 550, 710)
-        # shutil.rmtree(image)
-    # saving the pdf
-    print("notes created")
-    pdf.save()
 
+def create_notes(images:list,remove_images = True,output_path = r"Download\Notes.pdf"):
+    # create list of images
+    pil_imgs = [
+        Image.open(image) for image in images
+    ]
+    # create pdf
+    pil_imgs[0].save(
+        output_path,"PDF",resolution = 100.0, save_all = True,append_images = pil_imgs[1:]
+    )
+    # remove images used in pdf
+    if remove_images:
+        image_dir = Path(r"images")
+        for image_path in image_dir.iterdir():
+            image_path.unlink()
 
+def main():
+    COUNT = 0
+    SS_LIST = []
+    TAKE_SS = "right ctrl"
+    CREATE_PDF = "right shift"
+    STOP = "esc"
+    # infinite loop
+    while(True):
+        command = kb.read_key()
+        # print(command)
+        if command == TAKE_SS: 
+            COUNT += 1
+            image_name = screen_shot(f"images\ss-{COUNT}.png")
+            SS_LIST.append(image_name)
+            print(f"photo -- {COUNT}")
+        elif command == CREATE_PDF:
+            create_notes(SS_LIST)
+            print("pdf created system ended")
+            break
+        elif command == STOP:
+            break
 
-while(not END):
-    command = kb.read_key()
-    print(command)
-    if command == TAKE_SS: 
-        COUNT += 1
-        image_name = screen_shot(f"ss-{COUNT}.png")
-        SS_LIST.append(image_name)
-        print(f"photo -- {COUNT}")
-    elif command == CREATE_PDF:
-        create_notes(SS_LIST)
-        print("pdf created system ended")
-        break
-    elif "0" in command.lower():
-        END = True
-        break
-
-'''
-enter
-up
-ctrl
-space
-backspace
-right ctrl
-right shift
-backspace
-'''
+# run SS-TO-PDF tool
+main()
