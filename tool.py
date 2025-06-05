@@ -19,17 +19,23 @@ def screen_shot(save_path, main_screen = False,show_captured_ss = False):
 
 
 def create_notes(images:list,remove_images = True,output_path = r"Download\Notes.pdf"):
+    image_dir = Path(r"images")        
     # create list of images
     pil_imgs = [
         Image.open(image) for image in images
     ]
+    # images alreasy present
+    if not images:
+        pil_imgs = [
+            Image.open(image_path) for image_path in image_dir.iterdir()
+        ]
     # create pdf
     pil_imgs[0].save(
         output_path,"PDF",resolution = 100.0, save_all = True,append_images = pil_imgs[1:]
     )
     # remove images used in pdf
     if remove_images:
-        image_dir = Path(r"images")
+        # image_dir = Path(r"images")
         for image_path in image_dir.iterdir():
             image_path.unlink()
 
