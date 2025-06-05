@@ -2,6 +2,7 @@ from PIL import ImageGrab,Image
 from functools import partial
 from pathlib import Path
 import keyboard as kb
+# from pypdf import PdfMerger
 
 
 def screen_shot(save_path, main_screen = False,show_captured_ss = False):
@@ -38,6 +39,13 @@ def create_notes(images:list,remove_images = True,output_path = r"Download\Notes
         # image_dir = Path(r"images")
         for image_path in image_dir.iterdir():
             image_path.unlink()
+
+# def merg_pdfs(pdf_list,name ="merged_Notes.pdf"):
+#     merger = PdfMerger()
+#     for pdf in pdf_list:
+#         merger.append(pdf)
+#     merger.write(name)
+#     merger.close()
 
 def main():
     COUNT = 0
