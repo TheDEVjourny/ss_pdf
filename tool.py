@@ -2,6 +2,7 @@ from PIL import ImageGrab,Image
 from functools import partial
 from pathlib import Path
 import keyboard as kb
+import datetime
 # from pypdf import PdfMerger
 
 
@@ -19,16 +20,18 @@ def screen_shot(save_path, main_screen = False,show_captured_ss = False):
     return save_path
 
 
-def create_notes(images:list,remove_images = True,output_path = r"Download\Notes.pdf"):
-    image_dir = Path(r"images")        
-    # create list of images
-    pil_imgs = [
-        Image.open(image) for image in images
-    ]
+def create_notes(images:list = [],remove_images = True,output_path = r"Download\Notes.pdf"):
+    image_dir = Path(r"images") 
+    pil_imgs = []     
     # images alreasy present
     if not images:
         pil_imgs = [
             Image.open(image_path) for image_path in image_dir.iterdir()
+        ]
+    else:
+        # create list of images
+        pil_imgs = [
+            Image.open(image) for image in images
         ]
     # create pdf
     pil_imgs[0].save(
@@ -60,11 +63,12 @@ def main():
         # print(command)
         if command == TAKE_SS: 
             COUNT += 1
-            image_name = screen_shot(f"images\ss-{COUNT}.png")
+            now = datetime.datetime.now()
+            image_name = screen_shot(f"images\ss-{int(now.timestamp() * 1000)}.png")
             SS_LIST.append(image_name)
             print(f"photo -- {COUNT}")
         elif command == CREATE_PDF:
-            create_notes(SS_LIST)
+            create_notes()
             print("pdf created system ended")
             break
         elif command == REMOVE_IMAGE:
