@@ -1,0 +1,11 @@
+{
+    "Min_Time_Delay": 1,
+    "IMAGE_Type": "png",
+    "MAIN_SCREEN": true,
+    "TAKE_IMAGE": "right ctrl",
+    "CREATE_DOC": "right shift",
+    "STOP_PROCESS": "esc",
+    "REMOVE_IMAGE": "num lock",
+    "Document_type": "pdf",
+    "Output_Path": ""
+}
